@@ -22,6 +22,17 @@ CONSTANTS.ARANCEL_CAUCION_TOMADORA_TNA = 4.0 / 100;
  * @return El valor numérico del atributo solicitado para el símbolo especificado.
  * @customfunction
  */
+/**
+ * Cotizaciones en vivo de acciones argentinas (precio, volumen, bid/ask, variacion diaria).
+ *
+ * Uso: =acciones("symbol"; "valor")
+ * @param {string} symbol Ticker local de la accion, por ejemplo GGAL, YPFD, PAMP.
+ * @param {string} value Campo a devolver: c (precio), v (volumen), q_bid, px_bid, px_ask, q_ask, q_op, pct_change.
+ * @return {number} Valor solicitado para ese simbolo.
+ * @example =acciones("GGAL","c")
+ * @example =acciones("YPFD","pct_change")
+ * @customfunction
+ */
 function acciones(symbol, value) {
   // Consulta al API
   var url = 'https://data912.com/live/arg_stocks';
@@ -58,6 +69,14 @@ function acciones(symbol, value) {
  * @return Un arreglo bidimensional con todas las acciones y sus propiedades (symbol, c, v, q_bid, px_bid, px_ask, q_ask, q_op, pct_change)
  * @customfunction
  */
+/**
+ * Tabla completa de acciones argentinas con symbol, precio, volumen, bid/ask y variacion.
+ *
+ * Uso: =accionesLista()
+ * @return {Array} Encabezados + filas con datos actuales (symbol, c, v, q_bid, px_bid, px_ask, q_ask, q_op, pct_change).
+ * @example =accionesLista()
+ * @customfunction
+ */
 function accionesLista() {
   // Consulta al API
   var url = 'https://data912.com/live/arg_stocks';
@@ -88,6 +107,14 @@ function accionesLista() {
  * @return {Array} Un array de variables del BCRA donde cada elemento es [idVariable, valor]
  * @customfunction
  */
+/**
+ * Lista todas las variables publicadas por el BCRA (categoria, id, descripcion, valor y fecha).
+ *
+ * Uso: =bcraVariables()
+ * @return {Array} Matriz con filas [categoria, idVariable, descripcion, valor, fecha].
+ * @example =bcraVariables()
+ * @customfunction
+ */
 function bcraVariables() {
   try {
     // Fetch data from the BCRA API
@@ -113,6 +140,16 @@ function bcraVariables() {
  *
  * @param {number} id - The ID of the variable to fetch
  * @return The value of the specified variable
+ * @customfunction
+ */
+/**
+ * Valor mas reciente de una variable del BCRA (ej: reservas, tipos de cambio, tasa politica monetaria).
+ *
+ * Uso: =bcra(id)
+ * @param {number} id Identificador numerico del BCRA, ej 1 reservas, 4 TC minorista venta, 5 TC mayorista referencia, 6 TPM TEA.
+ * @return {number} Valor actual de la variable solicitada.
+ * @example =bcra(1)
+ * @example =bcra(6)
  * @customfunction
  */
 function bcra(id) {
@@ -159,6 +196,17 @@ function bcra(id) {
  * @return El valor numérico del atributo solicitado para el símbolo especificado.
  * @customfunction
  */
+/**
+ * Cotizaciones en vivo de bonos argentinos (precio, volumen, bid/ask, variacion diaria).
+ *
+ * Uso: =bonos("symbol"; "valor")
+ * @param {string} symbol Ticker del bono (ej: AL30, GD30, AE38).
+ * @param {string} value Campo: c (precio), v (volumen), q_bid, px_bid, px_ask, q_ask, q_op, pct_change.
+ * @return {number} Valor solicitado para el bono indicado.
+ * @example =bonos("AL30","c")
+ * @example =bonos("GD30","pct_change")
+ * @customfunction
+ */
 function bonos(symbol, value) {
   // Consulta al API
   var url = 'https://data912.com/live/arg_bonds';
@@ -193,6 +241,14 @@ function bonos(symbol, value) {
  * Obtiene la lista completa de bonos que cotizan en el mercado argentino desde la API.
  * 
  * @return {Array} Un arreglo con todos los bonos y sus propiedades (symbol, c, v, q_bid, px_bid, px_ask, q_ask, q_op, pct_change)
+ * @customfunction
+ */
+/**
+ * Tabla completa de bonos argentinos con precio, volumen, bid/ask y variacion.
+ *
+ * Uso: =bonosLista()
+ * @return {Array} Encabezados + filas (symbol, c, v, q_bid, px_bid, px_ask, q_ask, q_op, pct_change).
+ * @example =bonosLista()
  * @customfunction
  */
 function bonosLista() {
@@ -243,6 +299,18 @@ function bonosLista() {
  * @return {number} Importe neto de la operación.
  * @customfunction
  */
+/**
+ * Calcula caucion colocadora (dias negativos en la funcion general) y devuelve el importe neto.
+ *
+ * Uso: =caucionColocadora(dias; tna; importeBruto; [arancel])
+ * @param {number} dias Plazo en dias (debe ser positivo).
+ * @param {number} tna Tasa nominal anual en formato decimal o porcentaje de Sheets (ej: 120% -> 1.2).
+ * @param {number} importeBruto Monto bruto de la operacion en pesos.
+ * @param {number} [arancelCaucionColocadoraTna=0.015] Arancel TNA usado para colocadora (1.5% por defecto).
+ * @return {number} Importe neto como colocador, descontando arancel, derechos, gastos e IVA.
+ * @example =caucionColocadora(7;120%;1000000)
+ * @customfunction
+ */
 function caucionColocadora(
   dias,
   tna,
@@ -267,6 +335,18 @@ function caucionColocadora(
  * @param {number} importeBruto Monto bruto de la operación.
  * @param {number} [arancelCaucionTomadoraTna] [Opcional] Tasa de arancel para caución tomadora. Si no se proporciona, se usa el valor por defecto (4.0% por defecto para tomadora).
  * @return {number} Importe neto de la operación.
+ * @customfunction
+ */
+/**
+ * Calcula caucion tomadora y devuelve el importe neto (capital + intereses + gastos).
+ *
+ * Uso: =caucionTomadora(dias; tna; importeBruto; [arancelTomadora])
+ * @param {number} dias Plazo en dias (positivo).
+ * @param {number} tna Tasa nominal anual (ej: 140% -> 1.4).
+ * @param {number} importeBruto Capital solicitado en pesos.
+ * @param {number} [arancelCaucionTomadoraTna=0.04] Arancel TNA usado para tomadora (4% por defecto).
+ * @return {number} Importe neto a devolver como tomador incluyendo interes, aranceles, derechos, garantias e IVA.
+ * @example =caucionTomadora(30;150%;500000)
  * @customfunction
  */
 function caucionTomadora(dias, tna, importeBruto, arancelCaucionTomadoraTna) {
@@ -295,6 +375,20 @@ function caucionTomadora(dias, tna, importeBruto, arancelCaucionTomadoraTna) {
  * @return {Object} Un objeto con todos los valores calculados de la operación.
  * @customfunction
  */
+/**
+ * Calcula caucion segun el signo de los dias (negativo colocadora, positivo tomadora) y devuelve el importe neto.
+ *
+ * Uso: =caucion(dias; tna; importeBruto; [arancelColocadora]; [arancelTomadora])
+ * @param {number} dias Dias de la caucion; valor negativo = colocadora, positivo = tomadora.
+ * @param {number} tna TNA en formato decimal o porcentaje de Sheets.
+ * @param {number} importeBruto Monto de la operacion en pesos.
+ * @param {number} [arancelCaucionColocadoraTna=0.015] Arancel TNA para colocadora (1.5% por defecto).
+ * @param {number} [arancelCaucionTomadoraTna=0.04] Arancel TNA para tomadora (4% por defecto).
+ * @return {number} Importe neto final con intereses y todos los gastos.
+ * @example =caucion(-7;120%;1000000)
+ * @example =caucion(30;150%;500000; ;0.035)
+ * @customfunction
+ */
 function caucion(
   dias,
   tna,
@@ -321,6 +415,19 @@ function caucion(
  * @param {number} [arancelCaucionColocadoraTna] [Opcional] Tasa de arancel para caución colocadora. Si no se proporciona, se usa el valor por defecto (1.5% por defecto para colocadora).
  * @param {number} [arancelCaucionTomadoraTna] [Opcional] Tasa de arancel para caución tomadora. Si no se proporciona, se usa el valor por defecto (4.0% por defecto para tomadora).
  * @return {Array} Un array con todos los valores calculados de la operación.
+ * @customfunction
+ */
+/**
+ * Version detallada de caucion: devuelve tabla con interes, arancel, derechos, garantias, IVA y neto.
+ *
+ * Uso: =caucionDetallada(dias; tna; importeBruto; [arancelColocadora]; [arancelTomadora])
+ * @param {number} dias Dias; negativo = colocadora, positivo = tomadora.
+ * @param {number} tna TNA en formato decimal o porcentaje.
+ * @param {number} importeBruto Capital en pesos.
+ * @param {number} [arancelCaucionColocadoraTna=0.015] Arancel TNA para colocadora (1.5% por defecto).
+ * @param {number} [arancelCaucionTomadoraTna=0.04] Arancel TNA para tomadora (4% por defecto).
+ * @return {Array} Tabla de pares [concepto, valor] con todos los costos y el importe neto.
+ * @example =caucionDetallada(-10;125%;2000000;0.02;0.045)
  * @customfunction
  */
 function caucionDetallada(
@@ -441,6 +548,10 @@ function calcularIva(total) {
  * @return {Object} Un objeto con todos los valores calculados de la operación.
  * @customfunction
  */
+/**
+ * Helper interno de cauciones; preferi usar caucion/caucionDetallada/caucionColocadora/caucionTomadora en la hoja.
+ * @customfunction
+ */
 function calcularCaucion(
   dias,
   tna,
@@ -522,6 +633,18 @@ function calcularCaucion(
  *                      'q_ask' (cantidad ask), 'q_op' (operaciones diarias), 'pct_change' (variación porcentual),
  *                      'name' (nombre completo), 'ratio' (ratio de conversión)
  * @return El valor del atributo solicitado para el símbolo especificado.
+ * @customfunction
+ */
+/**
+ * Datos de CEDEARs argentinos (precio, volumen, bid/ask, variacion, nombre y ratio).
+ *
+ * Uso: =cedear("symbol"; "valor")
+ * @param {string} symbol Ticker del CEDEAR (ej: AAPL, MSFT, GOOGL).
+ * @param {string} value Campo: c, v, q_bid, px_bid, px_ask, q_ask, q_op, pct_change, name, ratio.
+ * @return Valor solicitado para el CEDEAR.
+ * @example =cedear("AAPL","c")
+ * @example =cedear("TSLA","name")
+ * @example =cedear("AMZN","ratio")
  * @customfunction
  */
 function cedear(symbol, value) {
@@ -621,6 +744,14 @@ function getCedearDataFromJson(symbol, attribute) {
  * @return Un arreglo bidimensional con todos los CEDEARs y sus propiedades (symbol, c, v, q_bid, px_bid, px_ask, q_ask, q_op, pct_change)
  * @customfunction
  */
+/**
+ * Tabla completa de CEDEARs con precios, volumen, bid/ask y variacion diaria.
+ *
+ * Uso: =cedearLista()
+ * @return {Array} Encabezados + filas (symbol, c, v, q_bid, px_bid, px_ask, q_ask, q_op, pct_change).
+ * @example =cedearLista()
+ * @customfunction
+ */
 function cedearLista() {
   // Consulta al API
   var url = 'https://data912.com/live/arg_cedears';
@@ -653,6 +784,21 @@ function cedearLista() {
  * @param {string} exchange [Opcional] El exchange específico a consultar. Si no se especifica, devuelve el mejor precio.
  * @param {string} operacion [Opcional] Tipo de operación: 'compra', 'venta', 'totalCompra', 'totalVenta'. Por defecto: 'totalCompra'
  * @return El precio de la operación solicitada.
+ * @customfunction
+ */
+/**
+ * Mejor precio o precio por exchange desde CriptoYa (compra/venta con o sin comisiones).
+ *
+ * Uso: =criptoya("coin"; "fiat"; [volumen]; [exchange]; [operacion])
+ * @param {string} coin Criptomoneda a consultar, ej: BTC, ETH, USDT, DAI.
+ * @param {string} fiat Moneda contra la que se opera, ej: ARS, USD, EUR.
+ * @param {number} [volumen=1] Volumen a operar (usa punto decimal).
+ * @param {string} [exchange] Exchange especifico (binance, ripio, letsbit, etc.). Si se omite usa el mejor precio.
+ * @param {string} [operacion="totalCompra"] compra, totalCompra, venta o totalVenta.
+ * @return {number} Precio para el par y operacion solicitados.
+ * @example =criptoya("BTC";"ARS")
+ * @example =criptoya("ETH";"USD";0.5;"binance";"venta")
+ * @example =criptoya("DAI";"ARS";100;;"totalVenta")
  * @customfunction
  */
 function criptoya(coin, fiat, volumen, exchange, operacion) {
@@ -781,6 +927,17 @@ function criptoya(coin, fiat, volumen, exchange, operacion) {
  * @return El precio actual de la criptomoneda especificada en la moneda indicada.
  * @customfunction
  */
+/**
+ * Precio spot de criptomonedas desde Coinbase.
+ *
+ * Uso: =crypto("symbol"; [moneda])
+ * @param {string} symbol Criptomoneda a consultar, ej: BTC, ETH, SOL.
+ * @param {string} [moneda="USD"] Moneda en la que quieres el precio (USD por defecto).
+ * @return {number} Precio actual del par symbol/moneda.
+ * @example =crypto("BTC")
+ * @example =crypto("ETH";"EUR")
+ * @customfunction
+ */
 function crypto(symbol, moneda) {
   // Valor por defecto
   moneda = moneda || 'USD';
@@ -845,6 +1002,18 @@ function crypto(symbol, moneda) {
  * @return El valor numérico de la operación solicitada.
  * @customfunction
  */
+/**
+ * Cotizaciones actuales de los distintos tipos de dolar en Argentina.
+ *
+ * Uso: =dolar("tipo"; [operacion])
+ * @param {string} tipo Casa: oficial, blue, bolsa, contadoconliqui, mayorista, cripto o tarjeta.
+ * @param {string} [operacion="venta"] Operacion a devolver: compra | venta | promedio.
+ * @return {number} Precio solicitado en ARS.
+ * @example =dolar("blue")
+ * @example =dolar("oficial";"compra")
+ * @example =dolar("mayorista";"promedio")
+ * @customfunction
+ */
 function dolar(tipo, operacion) {
   // Consulta al API
   var url = 'https://dolarapi.com/v1/dolares';
@@ -852,6 +1021,7 @@ function dolar(tipo, operacion) {
   var datos = JSON.parse(respuesta.getContentText());
   
   // Normalizo entradas
+  operacion = operacion || 'venta';
   var casa = tipo.toString().toLowerCase().trim();
   var op = operacion.toString().toLowerCase().trim();
   
@@ -882,6 +1052,18 @@ function dolar(tipo, operacion) {
  * @param {string} fecha - Fecha en formato YYYY-MM-DD
  * @param {string} valor - Opcional: "compra" o "venta" (por defecto es "venta")
  * @return {number} Valor de la cotización para el tipo y fecha solicitados
+ * @customfunction
+ */
+/**
+ * Cotizacion historica de un tipo de dolar para una fecha dada.
+ *
+ * Uso: =dolar_historico("tipo"; [fecha]; [valor])
+ * @param {string} tipo Tipo de dolar (blue, oficial, mayorista, etc.).
+ * @param {string} [fecha] Fecha en formato YYYY-MM-DD o MM/DD/YYYY. Si se omite usa la fecha actual.
+ * @param {string} [valor="venta"] Campo a devolver: compra o venta.
+ * @return {number} Cotizacion para la fecha y el tipo solicitados.
+ * @example =dolar_historico("blue";"2023-01-15")
+ * @example =dolar_historico("oficial";"2023-01-15";"compra")
  * @customfunction
  */
 function dolar_historico(tipo, fecha, valor = "venta") {
@@ -931,6 +1113,16 @@ function dolar_historico(tipo, fecha, valor = "venta") {
  * 
  * @param {string} fecha - Fecha en formato YYYY-MM-DD
  * @return {Array} Matriz con las cotizaciones de cada tipo de dólar para la fecha
+ * @customfunction
+ */
+/**
+ * Tabla con todas las cotizaciones de dolar (blue, oficial, mayorista, etc.) para una fecha dada.
+ *
+ * Uso: =dolar_historico_todos([fecha])
+ * @param {string} [fecha] Fecha en formato YYYY-MM-DD o MM/DD/YYYY; si se omite usa la fecha actual.
+ * @return {Array} Tabla con columnas Tipo, Compra, Venta y Fecha.
+ * @example =dolar_historico_todos("2023-01-15")
+ * @example =dolar_historico_todos()
  * @customfunction
  */
 function dolar_historico_todos(fecha) {
@@ -983,6 +1175,20 @@ function dolar_historico_todos(fecha) {
  * @param {string} fecha [Opcional] Fecha en formato 'YYYY-MM-DD'. Si no se proporciona, devuelve la información más reciente.
  * @param {string} campo [Opcional] Campo a consultar: "vcp" (valor cuotaparte), "ccp" (cantidad cuotapartes), "patrimonio". Por defecto: "vcp".
  * @return El valor solicitado para el fondo especificado.
+ * @customfunction
+ */
+/**
+ * Datos de Fondos Comunes de Inversion (FCI) por tipo, nombre, fecha y campo.
+ *
+ * Uso: =fci("tipoFondo"; "nombreFondo"; [fecha]; [campo])
+ * @param {string} tipoFondo Tipo de fondo: mercadoDinero, rentaVariable, rentaFija, rentaMixta.
+ * @param {string} nombreFondo Nombre del fondo (coincidencia parcial permitida).
+ * @param {string|Date} [fecha] Fecha YYYY-MM-DD o MM/DD/YYYY; si se omite usa el ultimo valor disponible.
+ * @param {string} [campo="vcp"] Campo: vcp (valor cuotaparte), ccp (cantidad cuotapartes), patrimonio.
+ * @return Valor solicitado para el fondo especificado.
+ * @example =fci("mercadoDinero";"Balanz Money Market USD - Clase A")
+ * @example =fci("rentaFija";"Pionero Renta";"2023-05-01")
+ * @example =fci("rentaVariable";"Alpha Acciones";;"patrimonio")
  * @customfunction
  */
 function fci(tipoFondo, nombreFondo, fecha, campo) {
@@ -1120,6 +1326,14 @@ function fci(tipoFondo, nombreFondo, fecha, campo) {
  * @return {Array} Una matriz con todos los fondos disponibles, incluyendo el nombre, tipo y valor de cuotaparte.
  * @customfunction
  */
+/**
+ * Tabla con todos los fondos disponibles y su ultimo valor de cuotaparte.
+ *
+ * Uso: =fciLista()
+ * @return {Array} Matriz [Nombre del Fondo, Tipo de Fondo, Valor Cuotaparte].
+ * @example =fciLista()
+ * @customfunction
+ */
 function fciLista() {
   // Tipos de fondos a consultar
   var tipos = ['mercadoDinero', 'rentaVariable', 'rentaFija', 'rentaMixta'];
@@ -1182,6 +1396,16 @@ function fciLista() {
  *
  * @param {string} fecha [Opcional] Fecha en formato 'YYYY-MM-DD' o 'MM/DD/YYYY'. Si no se proporciona, devuelve el valor más reciente.
  * @return El valor numérico del índice de inflación para la fecha especificada o el último disponible.
+ * @customfunction
+ */
+/**
+ * Indice mensual de inflacion de Argentina.
+ *
+ * Uso: =inflacion([fecha])
+ * @param {string|Date} [fecha] Fecha YYYY-MM-DD o MM/DD/YYYY; si se omite devuelve el dato mas reciente.
+ * @return {number} Valor del indice de inflacion para la fecha solicitada.
+ * @example =inflacion()
+ * @example =inflacion("2023-03-31")
  * @customfunction
  */
 function inflacion(fecha) {
@@ -1269,6 +1493,17 @@ function inflacion(fecha) {
  * @return The specified value for the given treasury bill
  * @customfunction
  */
+/**
+ * Cotizaciones en vivo de letras del tesoro argentinas.
+ *
+ * Uso: =letras("symbol"; "valor")
+ * @param {string} symbol Ticker de la letra (ej: BB2Y5, BNA6D, S31L5).
+ * @param {string} valor Campo: c (precio), v (volumen), q_bid, px_bid, px_ask, q_ask, q_op, pct_change.
+ * @return {number} Valor solicitado para la letra indicada.
+ * @example =letras("BB2Y5","c")
+ * @example =letras("BNA6D","px_ask")
+ * @customfunction
+ */
 function letras(symbol, valor) {
   // Validate inputs
   if (!symbol) {
@@ -1315,6 +1550,14 @@ function letras(symbol, valor) {
  * @return Un arreglo bidimensional con todas las letras y sus propiedades (symbol, c, v, q_bid, px_bid, px_ask, q_ask, q_op, pct_change)
  * @customfunction
  */
+/**
+ * Tabla de todas las letras disponibles con precio, volumen, bid/ask y variacion.
+ *
+ * Uso: =letrasLista()
+ * @return {Array} Encabezados + filas (symbol, c, v, q_bid, px_bid, px_ask, q_ask, q_op, pct_change).
+ * @example =letrasLista()
+ * @customfunction
+ */
 function letrasLista() {
   try {
     // Fetch data from the API
@@ -1350,6 +1593,17 @@ function letrasLista() {
  *                      'q_bid' (cantidad bid), 'px_bid' (precio bid), 'px_ask' (precio ask),
  *                      'q_ask' (cantidad ask), 'q_op' (operaciones diarias), 'pct_change' (variación porcentual)
  * @return El valor numérico del atributo solicitado para el símbolo especificado.
+ * @customfunction
+ */
+/**
+ * Cotizaciones de obligaciones negociables argentinas.
+ *
+ * Uso: =obligaciones("symbol"; "valor")
+ * @param {string} symbol Ticker de la obligacion negociable (ej: AEC1D, YMCHO, BYCNO).
+ * @param {string} value Campo: c (precio), v (volumen), q_bid, px_bid, px_ask, q_ask, q_op, pct_change.
+ * @return {number} Valor solicitado para la ON indicada.
+ * @example =obligaciones("AEC1D","c")
+ * @example =obligaciones("BYCNO","pct_change")
  * @customfunction
  */
 function obligaciones(symbol, value) {
@@ -1388,6 +1642,14 @@ function obligaciones(symbol, value) {
  * @return {Array} Un arreglo con todas las obligaciones negociables y sus propiedades (symbol, c, v, q_bid, px_bid, px_ask, q_ask, q_op, pct_change)
  * @customfunction
  */
+/**
+ * Tabla de obligaciones negociables con precio, volumen, bid/ask y variacion.
+ *
+ * Uso: =obligacionesLista()
+ * @return {Array} Encabezados + filas (symbol, c, v, q_bid, px_bid, px_ask, q_ask, q_op, pct_change).
+ * @example =obligacionesLista()
+ * @customfunction
+ */
 function obligacionesLista() {
   // Consulta al API
   var url = 'https://data912.com/live/arg_corp';
@@ -1419,6 +1681,17 @@ function obligacionesLista() {
  *                      'q_bid' (cantidad bid), 'px_bid' (precio bid), 'px_ask' (precio ask),
  *                      'q_ask' (cantidad ask), 'q_op' (operaciones diarias), 'pct_change' (variación porcentual)
  * @return El valor numérico del atributo solicitado para el símbolo especificado.
+ * @customfunction
+ */
+/**
+ * Cotizaciones de opciones argentinas (CALL/PUT) con precio, volumen y bid/ask.
+ *
+ * Uso: =opciones("symbol"; "valor")
+ * @param {string} symbol Ticker de la opcion, ej: ALUC1000JU o GGALV53000S (formato [TICKER][C/V][STRIKE][VENCIMIENTO]).
+ * @param {string} value Campo: c (precio), v (volumen), q_bid, px_bid, px_ask, q_ask, q_op, pct_change.
+ * @return {number} Valor solicitado para la opcion indicada.
+ * @example =opciones("YPFC49000J";"c")
+ * @example =opciones("ALUC800JU";"px_ask")
  * @customfunction
  */
 function opciones(symbol, value) {
@@ -1456,6 +1729,14 @@ function opciones(symbol, value) {
  * @return Un arreglo bidimensional con todas las opciones y sus propiedades (symbol, c, v, q_bid, px_bid, px_ask, q_ask, q_op, pct_change)
  * @customfunction
  */
+/**
+ * Tabla de todas las opciones disponibles con precio, volumen, bid/ask y variacion.
+ *
+ * Uso: =opcionesLista()
+ * @return {Array} Encabezados + filas (symbol, c, v, q_bid, px_bid, px_ask, q_ask, q_op, pct_change).
+ * @example =opcionesLista()
+ * @customfunction
+ */
 function opcionesLista() {
   // Consulta al API
   var url = 'https://data912.com/live/arg_options';
@@ -1485,6 +1766,18 @@ function opcionesLista() {
  * @param {string} banco [Opcional] El nombre del banco específico a consultar. Si no se especifica, devuelve la mejor tasa disponible.
  * @param {string} tipoCliente [Opcional] El tipo de cliente: "cliente" o "nocliente". Por defecto: "cliente".
  * @return La tasa nominal anual (TNA) expresada como porcentaje.
+ * @customfunction
+ */
+/**
+ * Tasa nominal anual de plazos fijos ofrecidos por bancos argentinos.
+ *
+ * Uso: =plazofijo([banco]; [tipoCliente])
+ * @param {string} [banco] Banco a consultar (Nacion, Galicia, Provincia, etc.). Si se omite, devuelve la mejor tasa disponible.
+ * @param {string} [tipoCliente="cliente"] Tipo de cliente: cliente o nocliente.
+ * @return {number} Tasa ofrecida por el banco/segmento solicitado.
+ * @example =plazofijo()
+ * @example =plazofijo("Nacion")
+ * @example =plazofijo("Provincia";"nocliente")
  * @customfunction
  */
 function plazofijo(banco, tipoCliente) {
@@ -1569,6 +1862,17 @@ function plazofijo(banco, tipoCliente) {
  * @param {string} moneda La criptomoneda o moneda fiat para la cual se quiere consultar el rendimiento (ej: 'BTC', 'USDT', 'ARS')
  * @param {string} proveedor [Opcional] El proveedor específico a consultar (ej: 'buenbit', 'ripio', 'letsbit'). Si no se especifica, devuelve el mejor rendimiento disponible.
  * @return El APY (rendimiento anual) expresado como porcentaje.
+ * @customfunction
+ */
+/**
+ * APY ofrecido para criptos o monedas fiat por distintos proveedores en Argentina.
+ *
+ * Uso: =rendimientos("moneda"; [proveedor])
+ * @param {string} moneda Criptomoneda o moneda fiat (ej: BTC, ETH, USDT, ARS).
+ * @param {string} [proveedor] Proveedor especifico (buenbit, ripio, letsbit, belo, lemoncash, satoshitango, fiwind). Si se omite devuelve el mejor rendimiento.
+ * @return {number} Rendimiento anual (APY) ofrecido para ese activo.
+ * @example =rendimientos("USDT")
+ * @example =rendimientos("BTC";"buenbit")
  * @customfunction
  */
 function rendimientos(moneda, proveedor) {
@@ -1669,6 +1973,16 @@ function rendimientos(moneda, proveedor) {
  * @return El valor numérico del riesgo país para la fecha especificada o el último disponible.
  * @customfunction
  */
+/**
+ * Valor del riesgo pais de Argentina.
+ *
+ * Uso: =riesgopais([fecha])
+ * @param {string|Date} [fecha] Fecha YYYY-MM-DD o MM/DD/YYYY; si se omite usa el valor mas reciente.
+ * @return {number} Riesgo pais para la fecha solicitada.
+ * @example =riesgopais()
+ * @example =riesgopais("2023-03-31")
+ * @customfunction
+ */
 function riesgopais(fecha) {
   // Consulta al API
   var url = 'https://api.argentinadatos.com/v1/finanzas/indices/riesgo-pais';
@@ -1756,6 +2070,17 @@ function riesgopais(fecha) {
  * @return El valor numérico del atributo solicitado para el símbolo especificado.
  * @customfunction
  */
+/**
+ * Cotizaciones en vivo de acciones estadounidenses (precio, volumen, bid/ask, variacion).
+ *
+ * Uso: =usa_stocks("symbol"; "valor")
+ * @param {string} symbol Ticker de la accion USA (ej: AAPL, MSFT, GOOGL).
+ * @param {string} value Campo: c (precio), v (volumen), q_bid, px_bid, px_ask, q_ask, q_op, pct_change.
+ * @return {number} Valor solicitado para la accion indicada.
+ * @example =usa_stocks("AAPL","c")
+ * @example =usa_stocks("MSFT","px_ask")
+ * @customfunction
+ */
 function usa_stocks(symbol, value) {
   // Consulta al API
   var url = 'https://data912.com/live/usa_stocks';
@@ -1791,6 +2116,14 @@ function usa_stocks(symbol, value) {
  * @return Un arreglo bidimensional con todas las acciones estadounidenses y sus propiedades (symbol, c, v, q_bid, px_bid, px_ask, q_ask, q_op, pct_change)
  * @customfunction
  */
+/**
+ * Tabla con todas las acciones USA disponibles con precio, volumen, bid/ask y variacion.
+ *
+ * Uso: =usa_stocksLista()
+ * @return {Array} Encabezados + filas (symbol, c, v, q_bid, px_bid, px_ask, q_ask, q_op, pct_change).
+ * @example =usa_stocksLista()
+ * @customfunction
+ */
 function usa_stocksLista() {
   // Consulta al API
   var url = 'https://data912.com/live/usa_stocks';
@@ -1819,6 +2152,16 @@ function usa_stocksLista() {
  *
  * @param {string} fecha [Opcional] Fecha en formato 'YYYY-MM-DD' o 'MM/DD/YYYY'. Si no se proporciona, devuelve el valor más reciente.
  * @return El valor numérico del índice UVA para la fecha especificada o el último disponible.
+ * @customfunction
+ */
+/**
+ * Valor del indice UVA (Unidad de Valor Adquisitivo) de Argentina.
+ *
+ * Uso: =uva([fecha])
+ * @param {string|Date} [fecha] Fecha YYYY-MM-DD o MM/DD/YYYY; si se omite devuelve el valor mas reciente.
+ * @return {number} Valor del UVA para la fecha solicitada.
+ * @example =uva()
+ * @example =uva("2023-03-31")
  * @customfunction
  */
 function uva(fecha) {
