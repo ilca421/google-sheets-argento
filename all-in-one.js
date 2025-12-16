@@ -11,6 +11,9 @@ CONSTANTS.IVA_PORCENTAJE = 21 / 100;
 CONSTANTS.ARANCEL_CAUCION_COLOCADORA_TNA = 1.5 / 100;
 CONSTANTS.ARANCEL_CAUCION_TOMADORA_TNA = 4.0 / 100;
 
+// Opciones para APIs con certificados problemáticos (ej. data912)
+var FETCH_OPTS_INSECURE = { validateHttpsCertificates: false };
+
 // ================ acciones.js ================
 /**
  * Obtiene información de acciones que cotizan en el mercado argentino desde la API.
@@ -36,7 +39,7 @@ CONSTANTS.ARANCEL_CAUCION_TOMADORA_TNA = 4.0 / 100;
 function acciones(symbol, value) {
   // Consulta al API
   var url = 'https://data912.com/live/arg_stocks';
-  var respuesta = UrlFetchApp.fetch(url);
+  var respuesta = UrlFetchApp.fetch(url, FETCH_OPTS_INSECURE);
   var datos = JSON.parse(respuesta.getContentText());
   
   // Normalizo entradas
@@ -80,7 +83,7 @@ function acciones(symbol, value) {
 function accionesLista() {
   // Consulta al API
   var url = 'https://data912.com/live/arg_stocks';
-  var respuesta = UrlFetchApp.fetch(url);
+  var respuesta = UrlFetchApp.fetch(url, FETCH_OPTS_INSECURE);
   var datos = JSON.parse(respuesta.getContentText());
   
   // Definir las columnas que queremos mostrar
@@ -210,7 +213,7 @@ function bcra(id) {
 function bonos(symbol, value) {
   // Consulta al API
   var url = 'https://data912.com/live/arg_bonds';
-  var respuesta = UrlFetchApp.fetch(url);
+  var respuesta = UrlFetchApp.fetch(url, FETCH_OPTS_INSECURE);
   var datos = JSON.parse(respuesta.getContentText());
   
   // Normalizo entradas
@@ -254,7 +257,7 @@ function bonos(symbol, value) {
 function bonosLista() {
   // Consulta al API
   var url = 'https://data912.com/live/arg_bonds';
-  var respuesta = UrlFetchApp.fetch(url);
+  var respuesta = UrlFetchApp.fetch(url, FETCH_OPTS_INSECURE);
   var datos = JSON.parse(respuesta.getContentText());
   
   // Definir las columnas que queremos mostrar
@@ -670,7 +673,7 @@ function cedear(symbol, value) {
   
   // Consulta al API para cotizaciones
   var url = 'https://data912.com/live/arg_cedears';
-  var respuesta = UrlFetchApp.fetch(url);
+  var respuesta = UrlFetchApp.fetch(url, FETCH_OPTS_INSECURE);
   var datos = JSON.parse(respuesta.getContentText());
   
   // Buscar el símbolo solicitado
@@ -755,7 +758,7 @@ function getCedearDataFromJson(symbol, attribute) {
 function cedearLista() {
   // Consulta al API
   var url = 'https://data912.com/live/arg_cedears';
-  var respuesta = UrlFetchApp.fetch(url);
+  var respuesta = UrlFetchApp.fetch(url, FETCH_OPTS_INSECURE);
   var datos = JSON.parse(respuesta.getContentText());
   
   // Definir las columnas que queremos mostrar
@@ -1527,7 +1530,7 @@ function letras(symbol, valor) {
   try {
     // Fetch data from the API
     const url = "https://data912.com/live/arg_notes";
-    const response = UrlFetchApp.fetch(url);
+    const response = UrlFetchApp.fetch(url, FETCH_OPTS_INSECURE);
     const letrasList = JSON.parse(response.getContentText());
     
     // Find the requested treasury bill
@@ -1562,7 +1565,7 @@ function letrasLista() {
   try {
     // Fetch data from the API
     const url = "https://data912.com/live/arg_notes";
-    const response = UrlFetchApp.fetch(url);
+    const response = UrlFetchApp.fetch(url, FETCH_OPTS_INSECURE);
     const datos = JSON.parse(response.getContentText());
     
     // Definir las columnas que queremos mostrar
@@ -1609,7 +1612,7 @@ function letrasLista() {
 function obligaciones(symbol, value) {
   // Consulta al API
   var url = 'https://data912.com/live/arg_corp';
-  var respuesta = UrlFetchApp.fetch(url);
+  var respuesta = UrlFetchApp.fetch(url, FETCH_OPTS_INSECURE);
   var datos = JSON.parse(respuesta.getContentText());
   
   // Normalizo entradas
@@ -1653,7 +1656,7 @@ function obligaciones(symbol, value) {
 function obligacionesLista() {
   // Consulta al API
   var url = 'https://data912.com/live/arg_corp';
-  var respuesta = UrlFetchApp.fetch(url);
+  var respuesta = UrlFetchApp.fetch(url, FETCH_OPTS_INSECURE);
   var datos = JSON.parse(respuesta.getContentText());
   
   // Definir las columnas que queremos mostrar
@@ -1697,7 +1700,7 @@ function obligacionesLista() {
 function opciones(symbol, value) {
   // Consulta al API
   var url = 'https://data912.com/live/arg_options';
-  var respuesta = UrlFetchApp.fetch(url);
+  var respuesta = UrlFetchApp.fetch(url, FETCH_OPTS_INSECURE);
   var datos = JSON.parse(respuesta.getContentText());
   
   // Normalizo entradas
@@ -1740,7 +1743,7 @@ function opciones(symbol, value) {
 function opcionesLista() {
   // Consulta al API
   var url = 'https://data912.com/live/arg_options';
-  var respuesta = UrlFetchApp.fetch(url);
+  var respuesta = UrlFetchApp.fetch(url, FETCH_OPTS_INSECURE);
   var datos = JSON.parse(respuesta.getContentText());
   
   // Definir las columnas que queremos mostrar
@@ -2084,7 +2087,7 @@ function riesgopais(fecha) {
 function usa_stocks(symbol, value) {
   // Consulta al API
   var url = 'https://data912.com/live/usa_stocks';
-  var respuesta = UrlFetchApp.fetch(url);
+  var respuesta = UrlFetchApp.fetch(url, FETCH_OPTS_INSECURE);
   var datos = JSON.parse(respuesta.getContentText());
   
   // Normalizo entradas
@@ -2127,7 +2130,7 @@ function usa_stocks(symbol, value) {
 function usa_stocksLista() {
   // Consulta al API
   var url = 'https://data912.com/live/usa_stocks';
-  var respuesta = UrlFetchApp.fetch(url);
+  var respuesta = UrlFetchApp.fetch(url, FETCH_OPTS_INSECURE);
   var datos = JSON.parse(respuesta.getContentText());
   
   // Definir las columnas que queremos mostrar
